@@ -28,8 +28,18 @@ Example output:
 
 ## buy-market-order.py
 
-This test script attempts to buy the maximum amount of a specified asset using a given amount of USDT at market price.
+This test script attempts to buy the maximum amount of a specified asset using a given amount of USDT at market price. It simulates placing a market order and provides details about the trade.
+
+Example output:
+```
+#2024-07-23 22:32:20.983 | INFO     | src.binance.client:get_current_price:13 - Current price for DOGEUSDT: [REDACTED]
+#2024-07-23 22:32:21.468 | INFO     | src.binance.client:place_market_order:54 - Market order placed: {'symbol': 'DOGEUSDT', 'orderId': [REDACTED], 'orderListId': [REDACTED], 'clientOrderId': [REDACTED], 'transactTime': [REDACTED], 'price': '0.00000000', 'origQty': '20.00000000', 'executedQty': '20.00000000', 'cummulativeQuoteQty': '2.61200000', 'status': 'FILLED', 'timeInForce': 'GTC', 'type': 'MARKET', 'side': 'BUY', 'workingTime': [REDACTED], 'fills': [{'price': '0.13060000', 'qty': '20.00000000', 'commission': '0.02000000', 'commissionAsset': 'DOGE', 'tradeId': [REDACTED]}], 'selfTradePreventionMode': 'EXPIRE_MAKER'}
+```
 
 ## sell-market-order.py
 
 This test script attempts to sell the maximum amount of a specified asset and calculates the total USDT you can obtain using a market order.
+
+
+
+
