@@ -9,7 +9,7 @@ sys.path.append(project_root)
 from src.binance.client import BinanceClient
 from src.json import load_json_config
 
-keys_config = load_json_config('configs/keys.json')['binance']
+keys_config = load_json_config('configs/keys.json')['Binance']
 
 BinanceClient = BinanceClient(keys_config['api_key'], keys_config['api_secret'])
 
