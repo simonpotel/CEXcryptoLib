@@ -55,7 +55,7 @@ class BinanceClient:
             min_qty = float(lot_size_filter['minQty'])
             step_size = float(lot_size_filter['stepSize'])
             
-            adjusted_quantity = max(min_qty, (quantity // step_size) * step_size)
+            adjusted_quantity = max(min_qty, (float(quantity) // step_size) * step_size)
             
             if side == 'BUY':
                 order = self.client.order_market_buy(symbol=pair, quantity=adjusted_quantity)
