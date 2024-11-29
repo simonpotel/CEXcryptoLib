@@ -24,7 +24,6 @@ class BinanceClient:
         price = self.get_current_price(pair)
         if price is None:
             return None
-        
 
         if order_type == 'BUY':
             quantity = amount / price
@@ -246,4 +245,39 @@ class BinanceClient:
             return max_sell_amount, fee
         except Exception as e:
             logger.error(f"Error getting max sell amount and fee for {asset} on {pair}: {e}")
+            return None
+
+    def place_short_leverage_order(self, pair, price, amount_usdt, leverage):
+        try:
+            self.client.futures_change_leverage(symbol=pair, leverage=leverage)
+
+            quantity = (amount_usdt * leverage) / price
+
+            order = self.client.futures_create_order(
+                symbol=pair,
+                side=SIDE_SELL,
+                type=ORDER_TYPE_MARKET,
+                quantity=quantity
+            )
+            logger.info(f"Short order placed with leverage: {order}")
+            return order
+        except Exception as e:
+            logger.error(f"Error placing short leverage order: {e}")
+            return None
+        
+    def close_short_position(self, pair, amount, price):
+        try:
+            quantity = amount / price
+
+            order = self.client.futures_create_order(
+                symbol=pair,
+                side=SIDE_BUY,  
+                type=ORDER_TYPE_MARKET,
+                quantity=quantity
+            )
+
+            logger.info(f"Short position closed: {order}")
+            return order
+        except Exception as e:
+            logger.error(f"Error closing short position: {e}")
             return None
