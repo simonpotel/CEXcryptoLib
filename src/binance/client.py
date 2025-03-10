@@ -70,6 +70,51 @@ class BinanceClient:
             logger.error(f"Error placing market order: {e}")
             return None
 
+    def place_limit_order(self, pair, quantity, price, side='BUY'):
+        try:
+            symbol_info = self.client.get_symbol_info(pair)
+            lot_size_filter = next(filter(lambda x: x['filterType'] == 'LOT_SIZE', symbol_info['filters']))
+            price_filter = next(filter(lambda x: x['filterType'] == 'PRICE_FILTER', symbol_info['filters']))
+            
+            min_qty = float(lot_size_filter['minQty'])
+            step_size = float(lot_size_filter['stepSize'])
+            tick_size = float(price_filter['tickSize'])
+            
+            adjusted_quantity = max(min_qty, (float(quantity) // step_size) * step_size)
+            adjusted_price = (float(price) // tick_size) * tick_size
+            
+            if side == 'BUY':
+                order = self.client.order_limit_buy(symbol=pair, quantity=adjusted_quantity, price=adjusted_price)
+            elif side == 'SELL':
+                order = self.client.order_limit_sell(symbol=pair, quantity=adjusted_quantity, price=adjusted_price)
+            else:
+                logger.error("Unsupported order type. Use 'BUY' or 'SELL'.")
+                return None
+            
+            logger.info(f"Limit order placed: {order}")
+            return order
+        except Exception as e:
+            logger.error(f"Error placing limit order: {e}")
+            return None
+
+    def check_order_status(self, pair, order_id):
+        try:
+            order = self.client.get_order(symbol=pair, orderId=order_id)
+            logger.debug(f"Order status for {order_id}: {order['status']}")
+            return order
+        except Exception as e:
+            logger.error(f"Error checking order status: {e}")
+            return None
+
+    def cancel_order(self, pair, order_id):
+        try:
+            result = self.client.cancel_order(symbol=pair, orderId=order_id)
+            logger.info(f"Order cancelled: {result}")
+            return result
+        except Exception as e:
+            logger.error(f"Error cancelling order: {e}")
+            return None
+
     def get_all_orders(self, pair):
         try:
             orders = self.client.get_all_orders(symbol=pair)

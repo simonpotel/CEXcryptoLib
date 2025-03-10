@@ -1,4 +1,3 @@
-# Manage PATH importation of src/binance/client
 import sys
 import os
 
