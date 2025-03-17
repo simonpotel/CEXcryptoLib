@@ -75,18 +75,37 @@ class BinanceClient:
             symbol_info = self.client.get_symbol_info(pair)
             lot_size_filter = next(filter(lambda x: x['filterType'] == 'LOT_SIZE', symbol_info['filters']))
             price_filter = next(filter(lambda x: x['filterType'] == 'PRICE_FILTER', symbol_info['filters']))
+            notional_filter = next(filter(lambda x: x['filterType'] == 'NOTIONAL', symbol_info['filters']))
             
             min_qty = float(lot_size_filter['minQty'])
             step_size = float(lot_size_filter['stepSize'])
             tick_size = float(price_filter['tickSize'])
+            min_notional = float(notional_filter['minNotional'])
             
-            adjusted_quantity = max(min_qty, (float(quantity) // step_size) * step_size)
-            adjusted_price = (float(price) // tick_size) * tick_size
+            price_precision = len(str(tick_size).rstrip('0').split('.')[-1])
+            adjusted_price = float(format(float(price), f'.{price_precision}f'))
+            
+            quantity_precision = len(str(step_size).rstrip('0').split('.')[-1])
+            adjusted_quantity = float(format(float(quantity) // step_size * step_size, f'.{quantity_precision}f'))
+            adjusted_quantity = max(min_qty, adjusted_quantity)
+            
+            notional_value = adjusted_quantity * adjusted_price
+            if notional_value < min_notional:
+                logger.error(f"Order value {notional_value} is less than minimum notional {min_notional}")
+                return None
             
             if side == 'BUY':
-                order = self.client.order_limit_buy(symbol=pair, quantity=adjusted_quantity, price=adjusted_price)
+                order = self.client.order_limit_buy(
+                    symbol=pair,
+                    quantity=adjusted_quantity,
+                    price=adjusted_price
+                )
             elif side == 'SELL':
-                order = self.client.order_limit_sell(symbol=pair, quantity=adjusted_quantity, price=adjusted_price)
+                order = self.client.order_limit_sell(
+                    symbol=pair,
+                    quantity=adjusted_quantity,
+                    price=adjusted_price
+                )
             else:
                 logger.error("Unsupported order type. Use 'BUY' or 'SELL'.")
                 return None
