@@ -27,11 +27,11 @@ class BinanceClient:
 
         if order_type == 'BUY':
             quantity = amount / price
-            logger.debug(f"With {amount} USDT, you can buy {quantity} {pair}.")
+            logger.debug(f"With {amount} USDC, you can buy {quantity} {pair}.")
             return quantity
         elif order_type == 'SELL':
             proceeds = amount * price
-            logger.debug(f"By selling {amount} {pair}, you can get {proceeds} USDT.")
+            logger.debug(f"By selling {amount} {pair}, you can get {proceeds} USDC.")
             return proceeds
         else:
             logger.error("Unsupported order type. Use 'BUY' or 'SELL'.")
@@ -311,11 +311,11 @@ class BinanceClient:
             logger.error(f"Error getting max sell amount and fee for {asset} on {pair}: {e}")
             return None
 
-    def place_short_leverage_order(self, pair, price, amount_usdt, leverage):
+    def place_short_leverage_order(self, pair, price, amount_usdc, leverage):
         try:
             self.client.futures_change_leverage(symbol=pair, leverage=leverage)
 
-            quantity = (amount_usdt * leverage) / price
+            quantity = (amount_usdc * leverage) / price
 
             order = self.client.futures_create_order(
                 symbol=pair,

@@ -13,7 +13,7 @@ keys_config = load_json_config('configs/keys.json')['Binance']
 
 BinanceClient = BinanceClient(keys_config['api_key'], keys_config['api_secret'])
 
-study_pair = 'TRXUSDT'
+study_pair = 'TRXUSDC'
 BinanceClient.get_current_price(study_pair)
 BinanceClient.get_trade_fee(study_pair)
 BinanceClient.get_all_orders(study_pair)

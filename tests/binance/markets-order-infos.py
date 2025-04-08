@@ -14,7 +14,7 @@ keys_config = load_json_config('configs/keys.json')['Binance']
 BinanceClient = BinanceClient(keys_config['api_key'], keys_config['api_secret'])
 
 asset = 'DOGE'
-pair = 'DOGEUSDT'
+pair = 'DOGEUSDC'
 asset_amount = 19.8
 
 BinanceClient.simulate_trade(asset, pair, asset_amount=asset_amount, trade_type='SELL')

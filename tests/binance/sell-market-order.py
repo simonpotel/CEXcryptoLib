@@ -12,7 +12,7 @@ keys_config = load_json_config('configs/keys.json')['Binance']
 
 BinanceClient = BinanceClient(keys_config['api_key'], keys_config['api_secret'])
 
-study_pair = 'DOGEUSDT'
+study_pair = 'DOGEUSDC'
 asset = 'DOGE'
 market_operation = 'SELL'
 amount_DOGE = float(BinanceClient.get_balance(asset)['free'])

@@ -13,9 +13,9 @@ keys_config = load_json_config('configs/keys.json')['Binance']
 
 BinanceClient = BinanceClient(keys_config['api_key'], keys_config['api_secret'])
 
-study_pair = 'DOGEUSDT'
+study_pair = 'DOGEUSDC'
 market_operation = 'BUY'
-amount_USDT = 1
+amount_USDC = 1
 
 BinanceClient.get_current_price(study_pair)
 
